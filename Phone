@@ -1,0 +1,154 @@
+using System;
+using System.Collections.Generic;
+
+namespace Phone
+{
+    abstract class Phone
+    {
+        protected List<string> phoneList = new List<string>();
+
+        public abstract void InsertPhone(string name, string phone);
+        public abstract void RemovePhone(string name);
+        public abstract void UpdatePhone(string name, string newPhone);
+        public abstract void SearchPhone(string name);
+        public abstract void Sort();
+
+        public void DisplayPhoneBook()
+        {
+            Console.WriteLine("Danh ba dien thoai:");
+            for (int i = 0; i < phoneList.Count; i += 2)
+            {
+                Console.WriteLine("Ten: " + phoneList[i] + ", So dien thoai: " + phoneList[i + 1]);
+            }
+        }
+
+        protected bool IsNameExist(string name)
+        {
+            return phoneList.Contains(name);
+        }
+
+        protected bool IsPhoneExist(string phone)
+        {
+            return phoneList.Contains(phone);
+        }
+    }
+
+    class PhoneBook : Phone
+    {
+        public override void InsertPhone(string name, string phone)
+        {
+            if (!IsNameExist(name))
+            {
+                phoneList.Add(name);
+                phoneList.Add(phone);
+            }
+            else
+            {
+                int index = phoneList.IndexOf(name);
+                if (!phoneList[index + 1].Equals(phone))
+                {
+                    phoneList[index + 1] = phone;
+                }
+            }
+        }
+
+        public override void RemovePhone(string name)
+        {
+            if (IsNameExist(name))
+            {
+                int index = phoneList.IndexOf(name);
+                phoneList.RemoveAt(index + 1);
+                phoneList.RemoveAt(index);
+            }
+        }
+
+        public override void UpdatePhone(string name, string newPhone)
+        {
+            if (IsNameExist(name))
+            {
+                int index = phoneList.IndexOf(name);
+                phoneList[index + 1] = newPhone;
+            }
+        }
+
+        public override void SearchPhone(string name)
+        {
+            bool found = false;
+            Console.WriteLine("Ket qua tim kiem:");
+
+            foreach (string entry in phoneList)
+            {
+                if (entry.IndexOf(name, StringComparison.OrdinalIgnoreCase) >= 0)
+                {
+                    Console.WriteLine("Ten: " + entry + ", So dien thoai: " + phoneList[phoneList.IndexOf(entry) + 1]);
+                    found = true;
+                }
+            }
+
+            if (!found)
+            {
+                Console.WriteLine("Khong tim thay " + name + " trong danh ba.");
+            }
+        }
+
+        public override void Sort()
+        {
+            phoneList.Sort();
+        }
+    }
+
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            PhoneBook phoneBook = new PhoneBook();
+
+            phoneBook.InsertPhone("Hung", "0123456789");
+            phoneBook.InsertPhone("Ly", "0987654321");
+            phoneBook.InsertPhone("Binh", "0906552368");
+            phoneBook.InsertPhone("Linh", "0956998236");
+            phoneBook.InsertPhone("Minh", "09563225698");
+            phoneBook.InsertPhone("Dung", "03652236814");
+            phoneBook.InsertPhone("Cong", "0956225456");
+            phoneBook.InsertPhone("Thai", "0996223456");
+            phoneBook.InsertPhone("Dat", "0365224968");
+            phoneBook.InsertPhone("Long", "0985996542");
+            phoneBook.InsertPhone("Viet", "0963221456");
+            phoneBook.InsertPhone("Vy", "0354220125");
+
+            phoneBook.DisplayPhoneBook(); // Hien thi danh ba dien thoai truoc khi tim kiem
+
+            Console.WriteLine("\nTim kiem:");
+
+            // Đọc chuỗi từ người dùng để tìm kiếm
+            string searchKeyword = Console.ReadLine();
+
+            phoneBook.SearchPhone(searchKeyword); // Hien thi ket qua tim kiem
+
+            Console.WriteLine("\nThem moi:");
+
+            // Đọc thông tin từ người dùng để thêm vào danh bạ
+            Console.Write("Nhap ten: ");
+            string newName = Console.ReadLine();
+            Console.Write("Nhap so dien thoai: ");
+            string newPhone = Console.ReadLine();
+
+            phoneBook.InsertPhone(newName, newPhone); // Them moi vao danh ba
+
+            phoneBook.DisplayPhoneBook(); // Hien thi danh ba sau khi them moi
+
+            Console.WriteLine("\nXoa:");
+
+            // Đọc thông tin từ người dùng để xóa khỏi danh bạ
+            Console.Write("Nhap ten can xoa: ");
+            string removeName = Console.ReadLine();
+
+            phoneBook.RemovePhone(removeName); // Xoa trong danh ba
+
+            phoneBook.DisplayPhoneBook(); // Hien thi danh ba sau khi xoa
+
+            Console.WriteLine("\nNhan Enter de ket thuc.");
+            Console.ReadLine(); //Enter để kết thúc chương trình
+        }
+    }
+}
